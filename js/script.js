@@ -1,11 +1,12 @@
 // GET ADD EMPLOYEE FORM AND EMPLOYEE TABLE FROM THE DOM
 
 const $ = selector => document.querySelector(selector);
-const tbody = $('tbody');
+const table = $('#employees');
 const form = $('form');
 
 // SET A COUNT VARIABLE TO DISPLAY NEXT TO EMPLOYEES HEADER
     let count = 0;
+    const outputCount = document.createElement('output');
 // ADD EMPLOYEE
 form.addEventListener('submit', (e) => {
     // PREVENT FORM SUBMISSION
@@ -17,7 +18,7 @@ form.addEventListener('submit', (e) => {
     let valueEmail = $('#email').value;
     let valueDpt = $('#department').value;
     // INSERT A NEW ROW AT THE END OF THE EMPLOYEES TABLE
-    let row = tbody.insertRow();
+    let row = table.insertRow();
 
     // INSERT A CELL FOR EACH ITEM WITHIN THE NEW ROW
     let cellID = row.insertCell()
@@ -42,16 +43,53 @@ form.addEventListener('submit', (e) => {
     // CREATE THE DELETE BUTTON
     let deleteBtn = document.createElement('button');
     let textDelete = document.createTextNode('x');
-    cellDelete.appendChild(deleteBtn);
     deleteBtn.appendChild(textDelete);
+    cellDelete.appendChild(deleteBtn);
+   
     // RESET THE FORM
     form.reset();
     // SET FOCUS BACK TO THE ID TEXT BOX
     $('#id').focus();
 
     // INCREMENENT THE NUMBER OF EMPLOYEES IN THE TABLE
-    count++
-})
+    count++;
+    maintainCount();
+});
 
-// DELETE EMPLOYEE
+// DELETE EMPLOYEE'
+table.addEventListener('click',(e) => {
+    if (e.target.tagName === 'BUTTON' &&  e.target.textContent === 'x'){
+        if (confirm('Are you sure you want to delete this employee?')){
+            table.deleteRow(e.target.parentElement.parentElement.rowIndex);
+            count--;
+            maintainCount();
+        }
+    }
+    
+});
+
+// MAINTAINING AN EMPLOYEE COUNT
+const maintainCount = () =>{
+    outputCount.textContent = `${count} Employees`;
+    if (count === 0){
+        outputCount.style.display = 'none';
+    }
+    else{
+        outputCount.style.display = 'block';
+    }
+};
+// DISPLAY AN EMPLOYEE COUNT
+const displayCount = () => {
+    let body = $('body');
+    let header = $('#main-header');
+    body.insertBefore(outputCount, header.nextSibling);
+};
+displayCount();
+   
+
+
+ 
+
+
+
 
